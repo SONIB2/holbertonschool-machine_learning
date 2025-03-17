@@ -36,16 +36,18 @@ def get_first_launch():
     # Get the list of launches from the response
     launches = response.json()
 
+    if not launches:
+        print("No launches found")
+        return
+
     # Sort the launches by the 'date_unix' field (ascending)
     launches.sort(key=lambda launch: launch['date_unix'])
 
     # Get the first launch
     first_launch = launches[0]
 
-    # Debugging: print the first launch to inspect its structure
-    print("First Launch Data:", first_launch)
-
     try:
+        # Extracting the necessary details
         launch_name = first_launch['name']
         launch_date = datetime.utcfromtimestamp(first_launch['date_unix']).strftime('%Y-%m-%dT%H:%M:%S%z')
         
@@ -53,12 +55,14 @@ def get_first_launch():
         rocket_id = first_launch['rocket']
         rocket_url = f"https://api.spacexdata.com/v4/rockets/{rocket_id}"
         rocket_response = requests.get(rocket_url)
+        rocket_response.raise_for_status()
         rocket_name = rocket_response.json().get('name', 'Unknown Rocket')
 
         # Fetch launchpad information using the launchpad ID
         launchpad_id = first_launch['launchpad']
         launchpad_url = f"https://api.spacexdata.com/v4/launchpads/{launchpad_id}"
         launchpad_response = requests.get(launchpad_url)
+        launchpad_response.raise_for_status()
         launchpad_data = launchpad_response.json()
         launchpad_name = launchpad_data.get('name', 'Unknown Launchpad')
         launchpad_locality = launchpad_data.get('locality', 'Unknown Locality')
@@ -66,6 +70,8 @@ def get_first_launch():
         # Print the result in the required format
         print(f"{launch_name} ({launch_date}) {rocket_name} - {launchpad_name} ({launchpad_locality})")
     
+    except requests.exceptions.RequestException as e:
+        print(f"Error: Network request failed - {e}")
     except KeyError as e:
         print(f"Error: Missing key {e} in launch data.")
     except TypeError as e:
