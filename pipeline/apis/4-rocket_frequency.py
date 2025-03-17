@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 This script fetches launch data from the SpaceX API and displays the number of launches per rocket.
 
