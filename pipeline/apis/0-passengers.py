@@ -5,14 +5,14 @@ Module to fetch Star Wars ships that can hold a given number of passengers.
 
 import requests
 
-def availableShips(passengerCount):
+ def availableShips(passengerCount):
     """
     Fetches and returns a list of Star Wars ships that can hold at least
     `passengerCount` passengers.
-    
+
     Args:
         passengerCount (int): Minimum number of passengers the ship should hold.
-    
+
     Returns:
         list: List of ship names that meet the criteria.
     """
