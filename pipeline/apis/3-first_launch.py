@@ -1,8 +1,29 @@
 #!/usr/bin/env python3
+"""
+This script fetches the first SpaceX launch from the SpaceX API and displays 
+the launch details including the name of the launch, the date, the rocket used, 
+and the launchpad used. The launch details are displayed in the following format:
+
+    <launch name> (<date>) <rocket name> - <launchpad name> (<launchpad locality>)
+
+The script uses the SpaceX API to get the necessary information and sorts the 
+launches by the 'date_unix' field to find the first launch.
+"""
+
 import requests
 from datetime import datetime
 
 def get_first_launch():
+    """
+    Fetches the first launch from the SpaceX API, sorts by date, and prints the
+    details of the launch in a specific format.
+
+    The format is: 
+    <launch name> (<date>) <rocket name> - <launchpad name> (<launchpad locality>)
+
+    The function makes multiple requests to the SpaceX API to get data about 
+    the launch, rocket, and launchpad, and then prints the details.
+    """
     # SpaceX API URL for launches
     url = "https://api.spacexdata.com/v4/launches"
     
@@ -51,4 +72,8 @@ def get_first_launch():
         print(f"Error: Type error - {e}")
 
 if __name__ == '__main__':
+    """
+    This checks if the script is being run as the main program and, if so, 
+    it calls the get_first_launch function to print the first launch details.
+    """
     get_first_launch()
