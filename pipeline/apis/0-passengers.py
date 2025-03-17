@@ -12,7 +12,7 @@ def availableShips(passengerCount):
     Fetches all Star Wars ships that can accommodate at least `passengerCount`.
 
     Args:
-        passengerCount (int): The min number of passengers the ship should hold.
+        passengerCount (int): The min number of passenger the ship should hold.
 
     Returns:
         list: A list of ship names that meet the criteria.
