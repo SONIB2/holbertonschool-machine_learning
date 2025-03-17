@@ -3,10 +3,10 @@ import requests
 from datetime import datetime
 
 def get_first_launch():
-    # SpaceX API URL
+    # SpaceX API URL for launches
     url = "https://api.spacexdata.com/v4/launches"
     
-    # Make an HTTP GET request to the SpaceX API
+    # Make an HTTP GET request to the SpaceX API to fetch launch data
     response = requests.get(url)
     if response.status_code != 200:
         print("Error: Unable to fetch data from SpaceX API")
@@ -24,27 +24,24 @@ def get_first_launch():
     # Debugging: print the first launch to inspect its structure
     print("First Launch Data:", first_launch)
 
-    # Extract necessary information
     try:
         launch_name = first_launch['name']
         launch_date = datetime.utcfromtimestamp(first_launch['date_unix']).strftime('%Y-%m-%dT%H:%M:%S%z')
         
-        # Check if rocket is a dictionary and if the 'name' exists within it
-        rocket_data = first_launch['rocket']
-        if isinstance(rocket_data, dict):
-            rocket_name = rocket_data['name']
-        else:
-            print("Error: 'rocket' field is not a dictionary:", rocket_data)
-            return
-        
-        launchpad_data = first_launch['launchpad']
-        if isinstance(launchpad_data, dict):
-            launchpad_name = launchpad_data['name']
-            launchpad_locality = launchpad_data['locality']
-        else:
-            print("Error: 'launchpad' field is not a dictionary:", launchpad_data)
-            return
-        
+        # Fetch rocket information using the rocket ID
+        rocket_id = first_launch['rocket']
+        rocket_url = f"https://api.spacexdata.com/v4/rockets/{rocket_id}"
+        rocket_response = requests.get(rocket_url)
+        rocket_name = rocket_response.json().get('name', 'Unknown Rocket')
+
+        # Fetch launchpad information using the launchpad ID
+        launchpad_id = first_launch['launchpad']
+        launchpad_url = f"https://api.spacexdata.com/v4/launchpads/{launchpad_id}"
+        launchpad_response = requests.get(launchpad_url)
+        launchpad_data = launchpad_response.json()
+        launchpad_name = launchpad_data.get('name', 'Unknown Launchpad')
+        launchpad_locality = launchpad_data.get('locality', 'Unknown Locality')
+
         # Print the result in the required format
         print(f"{launch_name} ({launch_date}) {rocket_name} - {launchpad_name} ({launchpad_locality})")
     
