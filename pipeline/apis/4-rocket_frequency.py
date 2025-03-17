@@ -1,4 +1,17 @@
 #!/usr/bin/env python3
+"""
+This script fetches launch data from the SpaceX API and displays the number of launches per rocket.
+
+It makes a request to the SpaceX API, processes the launch data, and counts the number of launches
+for each rocket. The results are then printed in descending order of launch count and, in case of ties,
+alphabetically by the rocket name.
+
+Example output:
+    Falcon 9: 103
+    Falcon 1: 5
+    Falcon Heavy: 3
+"""
+
 import requests
 
 def get_launch_count_by_rocket():
