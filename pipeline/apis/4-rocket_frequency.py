@@ -1,29 +1,41 @@
 #!/usr/bin/env python3
 import requests
-from collections import defaultdict
 
 def get_launch_count_by_rocket():
     """
-    Fetches SpaceX launches from the API and counts the number of launches per rocket.
-    The result is ordered by the number of launches (descending) and by rocket name (alphabetically) if counts are the same.
+    Fetches data from the SpaceX API and displays the number of launches per rocket.
+
+    The function retrieves launch data from SpaceX's unofficial API,
+    counts the number of launches for each rocket, and displays the results.
+    The results are sorted first by the number of launches in descending order
+    and then by rocket name in alphabetical order if the count is the same.
+
+    Output:
+        - Prints the rocket name and the count of launches in the format: 'Rocket Name: Count'
     """
     url = "https://api.spacexdata.com/v4/launches"
     response = requests.get(url)
     launches = response.json()
 
-    # Create a dictionary to count launches per rocket
-    rocket_count = defaultdict(int)
+    # Dictionary to store rocket names and their launch counts
+    rocket_counts = {}
 
+    # Counting the number of launches for each rocket
     for launch in launches:
-        rocket_name = launch['rocket']
-        rocket_count[rocket_name] += 1
+        rocket_id = launch['rocket']
+        rocket_name = launch['name']  # Assuming the rocket name is available here
+        if rocket_name not in rocket_counts:
+            rocket_counts[rocket_name] = 1
+        else:
+            rocket_counts[rocket_name] += 1
 
-    # Now sort the rockets by count (descending) and by rocket name (alphabetically if counts are equal)
-    sorted_rockets = sorted(rocket_count.items(), key=lambda x: (-x[1], x[0]))
+    # Sorting the rockets by launch count in descending order, 
+    # and by rocket name alphabetically if launch counts are the same
+    sorted_rockets = sorted(rocket_counts.items(), key=lambda x: (-x[1], x[0]))
 
-    # Print the results in the required format
-    for rocket, count in sorted_rockets:
-        print(f"{rocket}: {count}")
+    # Printing the results
+    for rocket_name, count in sorted_rockets:
+        print(f"{rocket_name}: {count}")
 
 if __name__ == '__main__':
     get_launch_count_by_rocket()
