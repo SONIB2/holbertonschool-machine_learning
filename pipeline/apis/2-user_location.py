@@ -28,7 +28,7 @@ def get_user_location(api_url):
     elif response.status_code == 404:
         print("Not found")
     elif response.status_code == 403:  # Rate limit exceeded
-        reset_time = int(response.headers.get("X-RateLimit-Reset", time.time()))
+        reset_time = int(response.headers.get("X-RatLimit-Reset", time.time()))
 
         minutes_remaining = max(0, (reset_time - time.time()) // 60)
         print(f"Reset in {int(minutes_remaining)} min")
