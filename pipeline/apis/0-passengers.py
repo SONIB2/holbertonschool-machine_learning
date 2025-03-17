@@ -1,35 +1,33 @@
 #!/usr/bin/env python3
 """
-Module to fetch Star Wars ships that can hold a given number of passengers.
+Module to fetch available ships from SWAPI.
 """
 
 import requests
 
- def availableShips(passengerCount):
+
+def availableShips(passengerCount):
     """
-    Fetches and returns a list of Star Wars ships that can hold at least
-    `passengerCount` passengers.
+    Returns a list of ships that can hold at least passengerCount passengers.
 
     Args:
-        passengerCount (int): Minimum number of passengers the ship should hold.
+        passengerCount (int): The number of passengers the ship must accommodate.
 
     Returns:
-        list: List of ship names that meet the criteria.
+        list: A list of ship names meeting the criteria.
     """
-    url = "https://swapi-api.alx-tools.com/api/starships/"
+    url = "https://swapi.dev/api/starships/"
     ships = []
 
     while url:
         response = requests.get(url)
-        if response.status_code != 200:
-            return []  # Return empty list if API request fails
-
         data = response.json()
-        for ship in data.get("results", []):
-            passengers = ship.get("passengers", "0").replace(",", "")
+
+        for ship in data["results"]:
+            passengers = ship["passengers"].replace(",", "").strip()
             if passengers.isdigit() and int(passengers) >= passengerCount:
                 ships.append(ship["name"])
 
-        url = data.get("next")  # Get next page URL if available
+        url = data["next"]
 
     return ships
